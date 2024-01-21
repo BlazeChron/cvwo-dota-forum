@@ -1,5 +1,26 @@
 Rails.application.routes.draw do
+
+  #Login
+  get 'login', to: 'sessions#new'
+  post 'login/new', to: 'sessions#create'
+  get 'login/queryUser', to: 'sessions#queryUser'
+
+  #Users
+  get '/signup', to: 'users#index'
+  post '/signup/new', to: 'users#create'
+  get 'users/destroy'
+  get 'users/show'
+
+  #Posts
   get 'posts/index'
+
+
+  #Comments
+  get 'comments/index'
+  get 'comments/new'
+  get 'comments/create'
+  get 'comments/show'
+  get 'comments/destroy'
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
   root 'posts#index'
 
