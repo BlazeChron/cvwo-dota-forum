@@ -1,6 +1,6 @@
 //for the login signup and displaying current user
 import React, {useState, useEffect} from "react"
-import { Navbar, NavDropdown, Container, Nav, Form, Button } from "react-bootstrap";
+import { Navbar, NavDropdown, Container, Nav, Form, Button, NavLink } from "react-bootstrap";
 import {Link, useNavigate} from "react-router-dom"
 
 const UserBar = ({submitSearch}) => {
@@ -54,6 +54,9 @@ const UserBar = ({submitSearch}) => {
     function signup(){
         navigate("/signup");
     }
+    function newPost(){
+        navigate("/posts/new");
+    }
 
     if (username !== "") {  //logged in
         return (
@@ -67,6 +70,7 @@ const UserBar = ({submitSearch}) => {
                     </Form>
                     <Navbar.Collapse className="justify-content-end">
                         <Nav>
+                            <Nav.Link onClick={newPost}>New Post</Nav.Link>
                             <NavDropdown title={username} menuVariant="dark">
                                 <NavDropdown.Item>Thing</NavDropdown.Item>
                                 <Nav.Link onClick={signOut}>Sign Out</Nav.Link>
@@ -88,7 +92,6 @@ const UserBar = ({submitSearch}) => {
                     </Form>
                     <Navbar.Collapse className="justify-content-end">
                         <Nav>
-                            
                             <Nav.Link onClick={signup}>Sign up</Nav.Link>
                             <Nav.Link onClick={login}>Log in</Nav.Link>
                         </Nav>

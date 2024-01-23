@@ -37,8 +37,11 @@ const PostNew = () => {
     return (
         <div>
             <Form>
+                <Form.Label>Title</Form.Label>
                 <Form.Control placeholder="Title" onChange={(event) => setTitle(event.target.value)}/>
+                <Form.Label>Body</Form.Label>
                 <Form.Control as="textarea" placeholder="Speak your mind" onChange={(event) => setBody(event.target.value)}/>
+                <Form.Label>Tags</Form.Label>
                 <Form.Control placeholder="Tags" onChange={(event) => setTags(event.target.value)}/>
                 <Button className="rounded-pill" variant="outline-primary" onClick={submitPost}>Submit</Button>
             </Form>
