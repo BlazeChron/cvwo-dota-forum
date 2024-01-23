@@ -1,14 +1,16 @@
 import React, {useState, useEffect} from "react";
 import { Link } from "react-router-dom";
 import UserBar from "./UserBar";
-import { Button, Form, Stack } from "react-bootstrap";
+import { Button, Form, Stack, Spinner } from "react-bootstrap";
 
 const Posts = () => {
 
     const [posts, setPosts] = useState<any[]>([]);
-    const [tags, setTags] = useState("");
 
-    useEffect(() => loadPosts(tags), []);
+    //page loading
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => loadPosts(""), [loading]);
 
     function loadPosts(tags) {
         const token = document.querySelector('meta[name="csrf-token"]').content;
@@ -24,6 +26,7 @@ const Posts = () => {
             })
             .then((res) => {
                 if (res.ok) {
+                    setLoading(false);
                     return res.json();
                 }
                 throw new Error("not return post res");
@@ -33,7 +36,7 @@ const Posts = () => {
         
     }
 
-    function handleSubmit(event) {
+    function handleSubmit(event, tags:string) {
         event.preventDefault();
         loadPosts(tags);
     }
@@ -46,18 +49,19 @@ const Posts = () => {
                 );
             });
     
-    return(
-    <div>
-        <UserBar />
-        <Form>
-            <Form.Control placeholder="Enter tags" onChange={(event) => setTags(event.target.value)}/>
-            <Button className="rounded-pill" variant="outline-primary" onClick={handleSubmit}>Search</Button>
-        </Form>
-        <Stack gap={3}>
-            {allposts}
-        </Stack>
-    </div>
-    );
+    if (loading) {
+        return (<Spinner animation="border" role="status"></Spinner>);
+    } else {
+        return(
+            <div>
+                <UserBar submitSearch={handleSubmit}/>
+                
+                <Stack gap={3}>
+                    {allposts}
+                </Stack>
+            </div>
+        );
+    }
 };
 
 export default Posts;

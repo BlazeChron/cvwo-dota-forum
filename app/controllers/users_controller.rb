@@ -19,7 +19,7 @@ class UsersController < ApplicationController
       render json: @response
     else 
       puts "failed"
-      @response = {success: false}
+      @response = {success: false, error: "Username already taken"}
       render json: @response
     end
   end

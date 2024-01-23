@@ -1,10 +1,12 @@
 //for the login signup and displaying current user
 import React, {useState, useEffect} from "react"
-import {Link} from "react-router-dom"
+import { Navbar, NavDropdown, Container, Nav, Form, Button } from "react-bootstrap";
+import {Link, useNavigate} from "react-router-dom"
 
-const UserBar = () => {
-
+const UserBar = ({submitSearch}) => {
+    const navigate = useNavigate();
     const [username, setUsername] = useState("");
+    const [tags, setTags] = useState("");
 
     useEffect(() => { loadUserBar() }, []);
 
@@ -40,23 +42,59 @@ const UserBar = () => {
                 "Content-Type": "application/json"
             },
         })
-        .then((response) => window.location.reload());
+        .then((response) => {
+            setUsername("");
+            window.location.reload();
+        });
+    }
+
+    function login(){
+        navigate("/login");
+    }
+    function signup(){
+        navigate("/signup");
     }
 
     if (username !== "") {  //logged in
         return (
-            <div>
-                <h1>{username}</h1>
-                <button onClick={signOut}>Sign out</button>
-                <Link to={"/posts/new"}>New Post</Link>
-            </div>
+            <Navbar bg="dark" variant="dark" expand="lg">
+                <Container fluid>
+                    <Navbar.Brand>Dota Forum</Navbar.Brand>
+                    <Navbar.Toggle/>
+                    <Form className='d-flex'>
+                        <Form.Control placeholder="Enter tags" onChange={(event) => setTags(event.target.value)}/>
+                        <Button className="rounded-pill" variant="outline-primary" onClick={(event) => submitSearch(event, tags)}>Search</Button>
+                    </Form>
+                    <Navbar.Collapse className="justify-content-end">
+                        <Nav>
+                            <NavDropdown title={username} menuVariant="dark">
+                                <NavDropdown.Item>Thing</NavDropdown.Item>
+                                <Nav.Link onClick={signOut}>Sign Out</Nav.Link>
+                            </NavDropdown>
+                        </Nav>
+                    </Navbar.Collapse>
+                </Container>
+            </Navbar>
         );
     } else {
         return (
-            <div>
-                <Link to={"/signup"}>Sign up</Link>
-                <Link to={"/login"}>Log in</Link>
-            </div>
+            <Navbar bg="dark" variant="dark" expand="lg">
+                <Container fluid>
+                    <Navbar.Brand>Dota Forum</Navbar.Brand>
+                    <Navbar.Toggle/>
+                    <Form className='d-flex'>
+                        <Form.Control placeholder="Enter tags" onChange={(event) => setTags(event.target.value)}/>
+                        <Button className="rounded-pill" variant="outline-primary" onClick={(event) => submitSearch(event, tags)}>Search</Button>
+                    </Form>
+                    <Navbar.Collapse className="justify-content-end">
+                        <Nav>
+                            
+                            <Nav.Link onClick={signup}>Sign up</Nav.Link>
+                            <Nav.Link onClick={login}>Log in</Nav.Link>
+                        </Nav>
+                    </Navbar.Collapse>
+                </Container>
+            </Navbar>
         );
     }
     

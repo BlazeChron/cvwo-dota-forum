@@ -12,7 +12,7 @@ class SessionsController < ApplicationController
       render json: @response
     else
       puts "invalidge"
-      @response = {success: false}
+      @response = {success: false, error: "Invalid username or password"}
       render json: @response
     end
   end

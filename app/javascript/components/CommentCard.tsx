@@ -80,11 +80,8 @@ const CommentCard = ({username, body, id}) => {
                 </Modal.Header>
                 <Modal.Body>
                 <Form>
-                    <Form.Group
-                    className="mb-3"
-                    controlId="exampleForm.ControlTextarea1"
-                    >
-                    <Form.Label>Example textarea</Form.Label>
+                    <Form.Group className="mb-3">
+                    <Form.Label>{body}</Form.Label>
                     <Form.Control as="textarea" rows={3} onChange={(event) => setCommentBody(event.target.value)}/>
                     </Form.Group>
                 </Form>

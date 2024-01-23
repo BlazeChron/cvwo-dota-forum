@@ -132,7 +132,6 @@ const Post = () => {
     if (loading) {
         return (<Spinner animation="border" role="status"></Spinner>);
     } else {
-
         return (
             <div>
                 <h1>greetings</h1>
