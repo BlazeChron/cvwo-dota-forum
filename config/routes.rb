@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   #Login
   get 'login', to: 'sessions#new'
   post 'login/new', to: 'sessions#create'
+  get 'login/destroy', to: 'sessions#destroy'
   get 'login/queryUser', to: 'sessions#queryUser'
 
   #Users
@@ -13,14 +14,26 @@ Rails.application.routes.draw do
 
   #Posts
   get 'posts/index'
-
+  get 'posts/new'
+  get 'posts/show', to: 'posts#show'
+  get 'posts/show/:id', to: 'posts#show'
+  get 'posts/show/data/:id', to: 'posts#showdata'
+  post 'posts/create'
+  post 'posts/search', to: 'posts#search'
+  delete 'posts/delete/:id', to: 'posts#destroy'
+  post 'posts/update/:id', to: 'posts#update'
 
   #Comments
   get 'comments/index'
   get 'comments/new'
-  get 'comments/create'
-  get 'comments/show'
-  get 'comments/destroy'
+  get "comments/:commentId", to: 'comments#index'
+  post 'comments/create/:id', to: 'comments#create'
+  get 'comments/show/:id', to: 'comments#show'
+  delete 'comments/delete/:id', to: 'comments#destroy'
+  get 'comments/isOriginalPoster/:id', to: 'comments#isOriginalPoster'
+  post 'comments/edit/:id', to: 'comments#update'
+
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
   root 'posts#index'
 

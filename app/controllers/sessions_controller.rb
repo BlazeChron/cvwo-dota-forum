@@ -8,14 +8,23 @@ class SessionsController < ApplicationController
       puts "yasyas"
       puts user.id
       session[:user_id] = user.id
+      @response = {success: true}
+      render json: @response
     else
       puts "invalidge"
+      @response = {success: false}
+      render json: @response
     end
+  end
+
+  def destroy
+    puts "over"
+    session[:user_id] = nil
   end
 
   def queryUser
     @response = {
-        user_id: session[:user_id]
+        username: User.find_by_id(session[:user_id]).username
       }
       render json: @response
   end

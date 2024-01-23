@@ -15,8 +15,12 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     if @user.save
       puts "saved"
+      @response = {success: true}
+      render json: @response
     else 
       puts "failed"
+      @response = {success: false}
+      render json: @response
     end
   end
 

@@ -1,8 +1,8 @@
 import React, {useState} from "react"
-import {Link} from "react-router-dom"
+import {useNavigate} from "react-router-dom"
 
 const Login = () => {
-
+    const navigate = useNavigate();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
@@ -21,6 +21,19 @@ const Login = () => {
                     password: password
             })
         })
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            }
+        })
+        .then((response) => {
+            if (response.success) {
+                navigate("/");
+            } else {
+                alert("Invalid Username or Password");
+            }
+        });
+
     }
 
     function queryUser() {
@@ -32,12 +45,15 @@ const Login = () => {
                 'X-CSRF-TOKEN': token,
                 "Content-Type": "application/json"
             },
-        }).then((response) => {if (response.ok) {
-            alert("response ok")
-            return response.json();
-        }}).then((response) => {g = response.user_id
-            
-        alert(g);
+        })
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            }
+        })
+        .then((response) => {
+            g = response.username
+            alert(g);
         });
 
     }
