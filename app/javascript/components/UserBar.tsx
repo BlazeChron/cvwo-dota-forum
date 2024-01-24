@@ -74,7 +74,6 @@ const UserBar = ({submitSearch}) => {
             <Nav>
                 <Nav.Link onClick={newPost}>New Post</Nav.Link>
                 <NavDropdown align="end" title={username} menuVariant="dark" style={{alignContent: "front"}}>
-                    <NavDropdown.Item>Thing</NavDropdown.Item>
                     <Nav.Link onClick={signOut}>Sign Out</Nav.Link>
                 </NavDropdown>
             </Nav>

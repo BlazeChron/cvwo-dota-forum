@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react"
 import {Params, useParams, useNavigate, NavigateFunction} from "react-router-dom"
-import { Spinner, Stack, Card, Container, Modal, Button, ModalTitle, Form } from 'react-bootstrap';
+import { Spinner, Stack, Card, Container, Modal, Button, ModalTitle, Form, Row, Col } from 'react-bootstrap';
 import CommentCard from "./CommentCard";
 
 const Post: () => React.JSX.Element = () => {
@@ -171,14 +171,20 @@ const Post: () => React.JSX.Element = () => {
             <Container fluid>
                 <Card style={{padding: "1rem", margin: "1rem", gap: "0.5rem"}}>
                     <Card.Title>{article.title}</Card.Title>
-                    <Card.Subtitle>Posted by: {article.original_poster}</Card.Subtitle>
                     <Card.Text>Tags: {article.tags}</Card.Text>
                     <Card style={{padding: "1rem"}} border="secondary">
                         <Card.Text>{article.body}</Card.Text>
                     </Card>
-                    <Button style={{alignSelf: "end"}} className="rounded-pill" variant="outline-primary" onClick={editPost}>Edit</Button>
+                    <Row className="justify-content-md-center">
+                        <Col xs>
+                        <Card.Subtitle>Posted by: {article.original_poster}</Card.Subtitle>
+                        </Col>
+                        <Col md="auto">
+                        <Button style={{alignSelf: "end"}} className="rounded-pill" variant="outline-primary" onClick={editPost}>Edit</Button>
+                        </Col>
+                    </Row>
                 </Card>
-                <Button onClick={startEditComment}>Add Comment</Button>
+                <Button style={{ margin: "1rem"}} onClick={startEditComment}>Add Comment</Button>
                 <Stack gap={3}>
                     {allcomments}
                 </Stack>

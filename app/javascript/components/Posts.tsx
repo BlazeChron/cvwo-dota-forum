@@ -1,9 +1,10 @@
 import React, {useState, useEffect} from "react";
 import { Link } from "react-router-dom";
 import UserBar from "./UserBar";
+import PostCard from "./PostCard";
 import { Stack, Spinner } from "react-bootstrap";
 
-const Posts = () => {
+const Posts: () => React.JSX.Element = () => {
 
     const [posts, setPosts] = useState<any[]>([]);
 
@@ -47,9 +48,9 @@ const Posts = () => {
 
     const allposts: React.JSX.Element[] =  posts.map((post, index) => {
                 return (
-                <div>
-                    <Link to={`/posts/show/${post.id}`}>{post.title}</Link>
-                </div>
+                <Stack gap={3} style={{margin: "0.5rem"}}>
+                    <PostCard title={post.title} body={post.body} original_poster={post.original_poster} id={post.id}/>
+                </Stack>
                 );
             });
     
@@ -60,9 +61,7 @@ const Posts = () => {
             <div>
                 <UserBar submitSearch={handleSubmit}/>
                 
-                <Stack gap={3}>
                     {allposts}
-                </Stack>
             </div>
         );
     }
