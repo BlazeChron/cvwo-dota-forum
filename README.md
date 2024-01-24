@@ -20,9 +20,9 @@ Run the following commands:
 
 yarn
 
-rails db:create
+rake db:create
 
-rails db:migrate
+rake db:migrate
 
 bin/dev
 
