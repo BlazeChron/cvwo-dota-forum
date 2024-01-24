@@ -44,6 +44,16 @@ class PostsController < ApplicationController
     end
   end
 
+  def isOriginalPoster
+    if (User.find(session[:user_id]).username === @post.original_poster)
+      @response = {success: true}
+      render json: @response
+    else
+      @response = {success: false}
+      render json: @response
+    end
+  end
+
   private
     def post_params
       puts params

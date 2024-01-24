@@ -5,7 +5,6 @@ import PostNew from "../components/PostNew";
 import Post from "../components/Post";
 import Signup from "../components/Signup";
 import Login from "../components/Login";
-import Comment from "../components/Comment";
 
 export default (
     <Router>
@@ -15,7 +14,6 @@ export default (
             <Route path="/login" element={<Login />} />
             <Route path="/posts/new" element={<PostNew />} />
             <Route path="/posts/show/:postId" element={<Post />} />
-            <Route path="/comments/:commentId" element={<Comment />} />
         </Routes>
     </Router>
 );

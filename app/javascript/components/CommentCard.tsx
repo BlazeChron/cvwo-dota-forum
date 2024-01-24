@@ -1,22 +1,25 @@
-import React, {useState, useEffect} from "react"
-import {Link, useParams, useNavigate} from "react-router-dom"
+import React, {useState} from "react"
 import { Button, Modal, ModalTitle, Form, Card, Container } from 'react-bootstrap';
 
-const CommentCard = ({username, body, id}) => {
-    const navigate = useNavigate();
+const CommentCard: ({ username, body, id }: {
+    username: any;
+    body: any;
+    id: any;
+}) => React.JSX.Element = ({username, body, id}) => {
     const [showEdit, setShowEdit] = useState(false);
     const [commentBody, setCommentBody] = useState("");
     
-    const checkUserUrl = `/comments/isOriginalPoster/${id}`
-    const deleteUrl = `/comments/delete/${id}`
-    const editUrl = `/comments/edit/${id}`
+    const checkUserUrl :string = `/comments/isOriginalPoster/${id}`
+    const deleteUrl :string = `/comments/delete/${id}`
+    const editUrl :string = `/comments/edit/${id}`
 
+    const token: string | null | undefined = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
     
     const stopEditComment = () => setShowEdit(false);
 
-    const editComment = () => {
+    const editComment: () => void = () => {
         fetch(checkUserUrl)
-        .then((res) => {
+        .then((res: Response) => {
             if (res.ok) {
                 return res.json();
             }
@@ -31,8 +34,10 @@ const CommentCard = ({username, body, id}) => {
         })
     };
 
-    function saveComment(event) {
-        const token = document.querySelector('meta[name="csrf-token"]').content;
+    function saveComment(): void {
+        if (!token) {
+            return;
+        }
         fetch(editUrl, {
             method: "POST",
             headers: {
@@ -43,7 +48,7 @@ const CommentCard = ({username, body, id}) => {
                     body: commentBody
             })
         })
-        .then((res) => {
+        .then((res: Response) => {
             if (res.ok) {
                 window.location.reload();
             }
@@ -51,8 +56,10 @@ const CommentCard = ({username, body, id}) => {
         })
     }
     
-    function deleteComment(event) {
-        const token = document.querySelector('meta[name="csrf-token"]').content;
+    function deleteComment() :void{
+        if (!token) {
+            return;
+        }
         fetch(deleteUrl, {
             method: "DELETE",
             headers: {
@@ -60,7 +67,7 @@ const CommentCard = ({username, body, id}) => {
                 "Content-Type": "application/json"
             }
         })
-        .then((res) => {
+        .then((res: Response) => {
             if (res.ok) {
                 window.location.reload();
             }
@@ -83,16 +90,15 @@ const CommentCard = ({username, body, id}) => {
                 <Modal.Body>
                 <Form>
                     <Form.Group className="mb-3">
-                    <Form.Label>{body}</Form.Label>
-                    <Form.Control as="textarea" rows={3} onChange={(event) => setCommentBody(event.target.value)}/>
+                    <Form.Control as="textarea" rows={3} onChange={(event) => setCommentBody(event.target.value)}>{body}</Form.Control>
                     </Form.Group>
                 </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                <Button variant="danger" onClick={deleteComment}>
+                <Button variant="danger" onClick={(event) => deleteComment()}>
                     Delete
                 </Button>
-                <Button variant="primary" onClick={saveComment}>
+                <Button variant="primary" onClick={(event) => saveComment()}>
                     Save Changes
                 </Button>
                 </Modal.Footer>

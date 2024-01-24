@@ -1,25 +1,31 @@
-import React, {useState, useEffect} from "react"
+import React, {useState} from "react"
 import { Container, Form, Card, Button, Alert, Row, Col } from "react-bootstrap";
-import {useNavigate} from "react-router-dom"
+import {useNavigate, NavigateFunction} from "react-router-dom"
 
 const Signup = () => {
 
-    const navigate = useNavigate();
+    const navigate: NavigateFunction = useNavigate();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [errorVisible, setErrorVisible] = useState(false);
     const [error, setError] = useState("");
 
-    
+    const token: string | null | undefined = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
-    function signupForm(event) {
-        event.preventDefault();
+    function signupForm(): void {
+        if (!token) {
+            return;
+        }
         if (password === "") {
             setError("Password cannot be empty");
             setErrorVisible(true);
             return;
         }
-        const token = document.querySelector('meta[name="csrf-token"]').content;
+        if (username === "") {
+            setError("Username cannot be empty");
+            setErrorVisible(true);
+            return;
+        }
         fetch("/signup/new", {
             method: "POST",
             headers: {
@@ -33,7 +39,7 @@ const Signup = () => {
                 }
             })
         })
-        .then((response) => {
+        .then((response: Response) => {
             if (response.ok) {
                 return response.json();
             }
@@ -48,11 +54,11 @@ const Signup = () => {
         });
     }
     
-    function loginFormNav() {
+    function loginFormNav(): void {
         navigate("/login")
     }
 
-    const logInButton = () => {
+    const logInButton: () => React.JSX.Element = () => {
         if (errorVisible) {
             return (
                 <Form.Group as={Col} show={errorVisible} className="mb-3" style={{textAlign: "center"}}>

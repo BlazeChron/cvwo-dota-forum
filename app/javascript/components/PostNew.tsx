@@ -1,19 +1,21 @@
 import React, {useState} from 'react'
-import { useNavigate } from "react-router-dom";
+import { useNavigate, NavigateFunction } from "react-router-dom";
 import { Form, Button, Card } from 'react-bootstrap';
 
 const PostNew = () => {
 
-    const navigate = useNavigate();
+    const navigate: NavigateFunction = useNavigate();
 
     const [title, setTitle] = useState("");
     const [body, setBody] = useState("");
     const [tags, setTags] = useState("");
 
-    function submitPost(event) {
-        event.preventDefault();
+    const token: string | null | undefined = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
-        const token = document.querySelector('meta[name="csrf-token"]').content;
+    function submitPost() {
+        if (!token) {
+            return;
+        }
         fetch("/posts/create", {
             method: "POST",
             headers: {

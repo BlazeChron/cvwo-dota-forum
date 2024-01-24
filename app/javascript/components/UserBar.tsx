@@ -1,17 +1,21 @@
 //for the login signup and displaying current user
 import React, {useState, useEffect} from "react"
-import { Navbar, NavDropdown, Container, Nav, Form, Button, NavLink } from "react-bootstrap";
-import {Link, useNavigate} from "react-router-dom"
+import { Navbar, NavDropdown, Container, Nav, Form, Button, InputGroup } from "react-bootstrap";
+import {NavigateFunction, useNavigate} from "react-router-dom"
 
 const UserBar = ({submitSearch}) => {
-    const navigate = useNavigate();
+    const navigate: NavigateFunction = useNavigate();
     const [username, setUsername] = useState("");
     const [tags, setTags] = useState("");
 
+    const token: string | null | undefined = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
     useEffect(() => { loadUserBar() }, []);
 
-    function loadUserBar() {
-        const token = document.querySelector('meta[name="csrf-token"]').content;
+    function loadUserBar(): void {
+        if (!token) {
+            return;
+        }
         fetch("/login/queryUser", {
             method: "GET",
             headers: {
@@ -19,7 +23,7 @@ const UserBar = ({submitSearch}) => {
                 "Content-Type": "application/json"
             },
         })
-        .then((response) => {
+        .then((response: Response) => {
             if (response.ok) {
                 return response.json();
             }
@@ -33,8 +37,10 @@ const UserBar = ({submitSearch}) => {
         });
     }
 
-    function signOut(event) {
-        const token = document.querySelector('meta[name="csrf-token"]').content;
+    function signOut(): void {
+        if (!token) {
+            return;
+        }
         fetch("/login/destroy", {
             method: "GET",
             headers: {
@@ -42,32 +48,32 @@ const UserBar = ({submitSearch}) => {
                 "Content-Type": "application/json"
             },
         })
-        .then((response) => {
+        .then((response: Response) => {
             setUsername("");
             window.location.reload();
         });
     }
 
-    function home(){
+    function home(): void{
         navigate("/");
     }
 
-    function login(){
+    function login(): void{
         navigate("/login");
     }
-    function signup(){
+    function signup(): void{
         navigate("/signup");
     }
-    function newPost(){
+    function newPost(): void{
         navigate("/posts/new");
     }
 
-    const signInNavBar = () => {
+    const signInNavBar: () => React.JSX.Element = () => {
         if (username !== "") {
             return(
             <Nav>
                 <Nav.Link onClick={newPost}>New Post</Nav.Link>
-                <NavDropdown title={username} menuVariant="dark">
+                <NavDropdown align="end" title={username} menuVariant="dark" style={{alignContent: "front"}}>
                     <NavDropdown.Item>Thing</NavDropdown.Item>
                     <Nav.Link onClick={signOut}>Sign Out</Nav.Link>
                 </NavDropdown>
@@ -91,9 +97,11 @@ const UserBar = ({submitSearch}) => {
                         Dota Forum
                     </Navbar.Brand>
                     <Navbar.Toggle/>
-                    <Form className='d-flex'>
-                        <Form.Control placeholder="Enter tags" onChange={(event) => setTags(event.target.value)}/>
-                        <Button className="rounded-pill" variant="outline-primary" onClick={(event) => submitSearch(event, tags)}>Search</Button>
+                    <Form className='d-flex' onSubmit={(event) => submitSearch(event, tags)}>
+                        <InputGroup>
+                            <Form.Control placeholder="Enter tags" value={tags} onChange={(event) => setTags(event.target.value)}/>
+                            <Button variant="secondary" onClick={(event) => submitSearch(event, tags)}>Search</Button>
+                        </InputGroup>
                     </Form>
                     <Navbar.Collapse className="justify-content-end">
                         {signInNavBar()}

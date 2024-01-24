@@ -1,16 +1,22 @@
 import React, {useState, useEffect} from "react"
-import {Link, useParams, useNavigate} from "react-router-dom"
-import { Spinner, Stack, Card } from 'react-bootstrap';
+import {Params, useParams, useNavigate, NavigateFunction} from "react-router-dom"
+import { Spinner, Stack, Card, Container, Modal, Button, ModalTitle, Form } from 'react-bootstrap';
 import CommentCard from "./CommentCard";
 
-const Post = () => {
-    let params = useParams();
-    const url = `/posts/show/data/${params.postId}`
+const Post: () => React.JSX.Element = () => {
+    let params: Readonly<Params<string>> = useParams();
+    const postDataUrl: string = `/posts/show/data/${params.postId}`
     const [article, setArticle] = useState<any>([]);
     const [comments, setComments] = useState<any[]>([]);
-    const navigate = useNavigate();
+    const navigate: NavigateFunction = useNavigate();
 
-    
+    //editing post
+    const checkUserUrl: string = `/posts/isOriginalPoster/${params.postId}`
+    const [showEditPost, setShowEditPost] = useState(false);
+
+    //creating comment
+    const [showEditComment, setShowEditComment] = useState(false);
+
     const [title, setTitle] = useState("");
     const [body, setBody] = useState("");
     const [tags, setTags] = useState("");
@@ -18,14 +24,16 @@ const Post = () => {
 
     //page loading
     const [loading, setLoading] = useState(true);
+
+    const token: string | null | undefined = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
     
     
     useEffect(() => {
 
-        let loadState = 0;
+        let loadState: number = 0;
 
-        fetch(url)
-        .then((res) => {
+        fetch(postDataUrl)
+        .then((res: Response) => {
             if (res.ok) {
                 return res.json();
             }
@@ -39,7 +47,7 @@ const Post = () => {
         .catch(() => "kickthemout");
         
         fetch(`/comments/show/${params.postId}`)
-        .then((res) => {
+        .then((res: Response) => {
             if (res.ok) {
                 return res.json();
             }
@@ -54,31 +62,33 @@ const Post = () => {
         
     }, [loading]);
 
-    function finishedLoading(state:number){
+    function finishedLoading(state:number): void{
         if (state >= 2) {
             setLoading(false);
         }
     }
 
-    function deleteAction() {
-        const token = document.querySelector('meta[name="csrf-token"]').content;
+    function deleteAction(): void {
+        if (!token) {
+            return;
+        }
         fetch(`/posts/delete/${params.postId}`, {
             method: "DELETE",
             headers: {
                 'X-CSRF-TOKEN': token,
                 "Content-Type": "application/json"
             }})
-        .then((res) => {
+        .then((res: Response) => {
             if (res.ok) {
                 navigate("/");
             }
             throw new Error("failed res");
         })
     }
-    function editPost(event) {
-        event.preventDefault();
-
-        const token = document.querySelector('meta[name="csrf-token"]').content;
+    function savePost(): void {
+        if (!token) {
+            return;
+        }
         fetch(`/posts/update/${params.postId}`, {
             method: "POST",
             headers: {
@@ -91,18 +101,41 @@ const Post = () => {
                     tags: tags
             })
         })
-        .then((res) => {
+        .then((res: Response) => {
             if (res.ok) {
-                navigate(`/posts/show/${params.postId}`);
+                window.location.reload();
             }
             throw new Error("not return post res");
         })
     }
 
-    function addComment(event) {
-        event.preventDefault();
+    const stopEditPost: () => void = () => setShowEditPost(false);
 
-        const token = document.querySelector('meta[name="csrf-token"]').content;
+    const editPost: () => void = () => {
+        fetch(checkUserUrl)
+        .then((res: Response) => {
+            if (res.ok) {
+                return res.json();
+            }
+            throw new Error("not return post res");
+        })
+        .then((res) => {
+            if (res.success) {
+                setTitle(article.title);
+                setBody(article.body);
+                setTags(article.tags);
+                setShowEditPost(true);
+            } else {
+                alert("You may not edit this post")
+            }
+        })
+    };
+
+    function addComment(event): void {
+        if (!token) {
+            return;
+        }
+        event.preventDefault();
         fetch(`/comments/create/${params.postId}`, {
             method: "POST",
             headers: {
@@ -115,15 +148,17 @@ const Post = () => {
                     }
             })
         })
-        .then((res) => {
+        .then((res: Response) => {
             if (res.ok) {
-                
+                window.location.reload();
             }
             throw new Error("not return post res");
         })
     }
+    const startEditComment: () => void = () => setShowEditComment(true);
+    const stopEditComment: () => void = () => setShowEditComment(false);
 
-    const allcomments = comments.map((thing, index) =>
+    const allcomments: React.JSX.Element[] = comments.map((thing, index) =>
     <div>
         <CommentCard username={thing.original_poster} body={thing.body} id={thing.id} />
     </div>
@@ -133,44 +168,63 @@ const Post = () => {
         return (<Spinner animation="border" role="status"></Spinner>);
     } else {
         return (
-            <div>
-                <h1>greetings</h1>
-                <h1>{article.original_poster}</h1>
-                <h2>{article.title}</h2>
-                <h3>{article.body}</h3>
-                <h4>{article.tags}</h4>
-                <button onClick={deleteAction}>delete</button>
-                <form onSubmit={editPost}>
-                    <div>
-                        <label>Enter Title:
-                            <input name="baka" onChange={(event) => setTitle(event.target.value)}></input>
-                        </label>
-                        <label>Enter Body:
-                            <input name="baka2" onChange={(event) => setBody(event.target.value)}></input>
-                        </label>
-                        <label>Enter Tags:
-                            <input name="baka3" onChange={(event) => setTags(event.target.value)}></input>
-                        </label>
-                        <button>Submit</button>
-                    </div>
-                </form>
+            <Container fluid>
+                <Card style={{padding: "1rem", margin: "1rem", gap: "0.5rem"}}>
+                    <Card.Title>{article.title}</Card.Title>
+                    <Card.Subtitle>Posted by: {article.original_poster}</Card.Subtitle>
+                    <Card.Text>Tags: {article.tags}</Card.Text>
+                    <Card style={{padding: "1rem"}} border="secondary">
+                        <Card.Text>{article.body}</Card.Text>
+                    </Card>
+                    <Button style={{alignSelf: "end"}} className="rounded-pill" variant="outline-primary" onClick={editPost}>Edit</Button>
+                </Card>
+                <Button onClick={startEditComment}>Add Comment</Button>
+                <Stack gap={3}>
+                    {allcomments}
+                </Stack>
 
+                <Modal show={showEditPost} onHide={stopEditPost}>
+                    <Modal.Header closeButton>
+                        <ModalTitle>Edit Post</ModalTitle>
+                    </Modal.Header>
+                    <Modal.Body>
+                    <Form>
+                        <Form.Control value={title} onChange={(event) => setTitle(event.target.value)}></Form.Control>
+                        <Form.Group className="mb-3">
+                        <Form.Control as="textarea" rows={3} onChange={(event) => setBody(event.target.value)}>{body}</Form.Control>
+                        <Form.Control value={tags} onChange={(event) => setTags(event.target.value)}></Form.Control>
+                        </Form.Group>
+                    </Form>
+                    </Modal.Body>
+                    <Modal.Footer>
+                    <Button variant="danger" onClick={deleteAction}>
+                        Delete
+                    </Button>
+                    <Button variant="primary" onClick={savePost}>
+                        Save Changes
+                    </Button>
+                    </Modal.Footer>
+                </Modal>
 
-                <div>
-                    <form onSubmit={addComment}>
-                        <div>
-                            <label>Enter Body:
-                                <input name="baka4" onChange={(event) => setCommentBody(event.target.value)}></input>
-                            </label>
-                            <button>Submit</button>
-                        </div>
-
-                    </form>
-                    </div>
-                    <Stack gap={3}>
-                        {allcomments}
-                    </Stack>
-                </div>
+                <Modal show={showEditComment} onHide={stopEditComment}>
+                    <Modal.Header closeButton>
+                        <ModalTitle>Edit Comment</ModalTitle>
+                    </Modal.Header>
+                    <Modal.Body>
+                    <Form>
+                        <Form.Group className="mb-3">
+                        <Form.Label>{body}</Form.Label>
+                        <Form.Control as="textarea" rows={3} onChange={(event) => setCommentBody(event.target.value)}/>
+                        </Form.Group>
+                    </Form>
+                    </Modal.Body>
+                    <Modal.Footer>
+                    <Button variant="primary" onClick={(event) => addComment(event)}>
+                        Post
+                    </Button>
+                    </Modal.Footer>
+                </Modal>
+            </Container>
         );
     }
 }

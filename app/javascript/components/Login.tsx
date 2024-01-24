@@ -1,23 +1,24 @@
 import React, {useState, useEffect} from "react"
-import {useNavigate} from "react-router-dom"
+import {useNavigate, NavigateFunction} from "react-router-dom"
 import { Container, Form, Card, Button, Alert, Row, Col } from "react-bootstrap";
-import UserBar from "./UserBar";
 
-const Login = () => {
-    const navigate = useNavigate();
+const Login: () => React.JSX.Element = () => {
+    const navigate: NavigateFunction = useNavigate();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [errorVisible, setErrorVisible] = useState(false);
     const [error, setError] = useState("");
 
+    const token: string | null | undefined = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
     useEffect(() => {
 
     }, [errorVisible]);
 
-    function loginForm(event) {
-        event.preventDefault();
-
-        const token = document.querySelector('meta[name="csrf-token"]').content;
+    function loginForm() :void{
+        if (!token) {
+            return;
+        }
         fetch("/login/new", {
             method: "POST",
             headers: {
@@ -29,7 +30,7 @@ const Login = () => {
                     password: password
             })
         })
-        .then((response) => {
+        .then((response: Response) => {
             if (response.ok) {
                 return response.json();
             }
@@ -45,11 +46,11 @@ const Login = () => {
 
     }
 
-    function signupFormNav() {
+    function signupFormNav() :void{
         navigate("/signup")
     }
 
-    const signUpButton = () => {
+    const signUpButton: () => React.JSX.Element = () => {
         if (errorVisible) {
             return (
                 <Form.Group as={Col} show={errorVisible} className="mb-3" style={{textAlign: "center"}}>
@@ -66,7 +67,7 @@ const Login = () => {
             
             <Card style={{minWidth: '20rem', maxWidth: '20rem', padding: "1rem"}}>
                 <Card.Header>Log In</Card.Header>
-                    <Form>
+                    <Form onSubmit={loginForm}>
                         <Form.Group className="mb-3">
                             <Form.Label>Username:</Form.Label>
                             <Form.Control placeholder="" type="text"  onChange={(event) => setUsername(event.target.value)}/>

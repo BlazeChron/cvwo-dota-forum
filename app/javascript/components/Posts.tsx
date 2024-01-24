@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react";
 import { Link } from "react-router-dom";
 import UserBar from "./UserBar";
-import { Button, Form, Stack, Spinner } from "react-bootstrap";
+import { Stack, Spinner } from "react-bootstrap";
 
 const Posts = () => {
 
@@ -10,38 +10,42 @@ const Posts = () => {
     //page loading
     const [loading, setLoading] = useState(true);
 
+    const token: string | null | undefined = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
     useEffect(() => loadPosts(""), [loading]);
 
-    function loadPosts(tags) {
-        const token = document.querySelector('meta[name="csrf-token"]').content;
-            fetch("/posts/search", {
-                method: "POST",
-                headers: {
-                    'X-CSRF-TOKEN': token,
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                        tags: tags
-                })
+    function loadPosts(tags: string): void {
+        if (!token) {
+            return;
+        }
+        fetch("/posts/search", {
+            method: "POST",
+            headers: {
+                'X-CSRF-TOKEN': token,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                    tags: tags
             })
-            .then((res) => {
-                if (res.ok) {
-                    setLoading(false);
-                    return res.json();
-                }
-                throw new Error("not return post res");
-            })
-            .then((res) => setPosts(res))
-            .catch(() => "kickthemout");
+        })
+        .then((res: Response) => {
+            if (res.ok) {
+                setLoading(false);
+                return res.json();
+            }
+            throw new Error("not return post res");
+        })
+        .then((res) => setPosts(res))
+        .catch(() => "kickthemout");
         
     }
 
-    function handleSubmit(event, tags:string) {
+    function handleSubmit(event: React.ChangeEvent<HTMLInputElement>, tags:string) {
         event.preventDefault();
         loadPosts(tags);
     }
 
-    const allposts =  posts.map((post, index) => {
+    const allposts: React.JSX.Element[] =  posts.map((post, index) => {
                 return (
                 <div>
                     <Link to={`/posts/show/${post.id}`}>{post.title}</Link>

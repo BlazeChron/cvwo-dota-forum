@@ -22,6 +22,7 @@ Rails.application.routes.draw do
   post 'posts/search', to: 'posts#search'
   delete 'posts/delete/:id', to: 'posts#destroy'
   post 'posts/update/:id', to: 'posts#update'
+  get 'posts/isOriginalPoster/:id', to: 'posts#isOriginalPoster'
 
   #Comments
   get 'comments/index'
