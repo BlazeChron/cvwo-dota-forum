@@ -4,15 +4,26 @@ Project for CVWO
 Setup:
 
 Prerequisites:
+
 Node.js and npm
+
 Yarn package manager
+
 Ruby on Rails v7
+
 Postgresql
 
+
 Setting up the database
+
 Run the following commands:
+
+yarn
+
 rails db:create
+
 rails db:migrate
+
 bin/dev
 
 View the website at
