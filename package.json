@@ -27,5 +27,8 @@
   },
   "browserslist": [
     "defaults"
-  ]
+  ],
+  "devDependencies": {
+    "@types/node": "^20.11.6"
+  }
 }

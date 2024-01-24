@@ -48,6 +48,10 @@ const UserBar = ({submitSearch}) => {
         });
     }
 
+    function home(){
+        navigate("/");
+    }
+
     function login(){
         navigate("/login");
     }
@@ -58,48 +62,45 @@ const UserBar = ({submitSearch}) => {
         navigate("/posts/new");
     }
 
-    if (username !== "") {  //logged in
-        return (
-            <Navbar bg="dark" variant="dark" expand="lg">
-                <Container fluid>
-                    <Navbar.Brand>Dota Forum</Navbar.Brand>
-                    <Navbar.Toggle/>
-                    <Form className='d-flex'>
-                        <Form.Control placeholder="Enter tags" onChange={(event) => setTags(event.target.value)}/>
-                        <Button className="rounded-pill" variant="outline-primary" onClick={(event) => submitSearch(event, tags)}>Search</Button>
-                    </Form>
-                    <Navbar.Collapse className="justify-content-end">
-                        <Nav>
-                            <Nav.Link onClick={newPost}>New Post</Nav.Link>
-                            <NavDropdown title={username} menuVariant="dark">
-                                <NavDropdown.Item>Thing</NavDropdown.Item>
-                                <Nav.Link onClick={signOut}>Sign Out</Nav.Link>
-                            </NavDropdown>
-                        </Nav>
-                    </Navbar.Collapse>
-                </Container>
-            </Navbar>
-        );
-    } else {
-        return (
-            <Navbar bg="dark" variant="dark" expand="lg">
-                <Container fluid>
-                    <Navbar.Brand>Dota Forum</Navbar.Brand>
-                    <Navbar.Toggle/>
-                    <Form className='d-flex'>
-                        <Form.Control placeholder="Enter tags" onChange={(event) => setTags(event.target.value)}/>
-                        <Button className="rounded-pill" variant="outline-primary" onClick={(event) => submitSearch(event, tags)}>Search</Button>
-                    </Form>
-                    <Navbar.Collapse className="justify-content-end">
-                        <Nav>
-                            <Nav.Link onClick={signup}>Sign up</Nav.Link>
-                            <Nav.Link onClick={login}>Log in</Nav.Link>
-                        </Nav>
-                    </Navbar.Collapse>
-                </Container>
-            </Navbar>
-        );
+    const signInNavBar = () => {
+        if (username !== "") {
+            return(
+            <Nav>
+                <Nav.Link onClick={newPost}>New Post</Nav.Link>
+                <NavDropdown title={username} menuVariant="dark">
+                    <NavDropdown.Item>Thing</NavDropdown.Item>
+                    <Nav.Link onClick={signOut}>Sign Out</Nav.Link>
+                </NavDropdown>
+            </Nav>
+            );
+        } else {
+            return (
+                <Nav>
+                    <Nav.Link onClick={signup}>Sign up</Nav.Link>
+                    <Nav.Link onClick={login}>Log in</Nav.Link>
+                </Nav>
+            );
+        }
     }
+
+        return (
+            <Navbar bg="dark" variant="dark" expand="lg">
+                <Container fluid>
+                    <Navbar.Brand onClick={home}>
+                        <img src={"/images/dota-logo.jpg"} style={{maxHeight: "2rem"}}/>
+                        Dota Forum
+                    </Navbar.Brand>
+                    <Navbar.Toggle/>
+                    <Form className='d-flex'>
+                        <Form.Control placeholder="Enter tags" onChange={(event) => setTags(event.target.value)}/>
+                        <Button className="rounded-pill" variant="outline-primary" onClick={(event) => submitSearch(event, tags)}>Search</Button>
+                    </Form>
+                    <Navbar.Collapse className="justify-content-end">
+                        {signInNavBar()}
+                    </Navbar.Collapse>
+                </Container>
+            </Navbar>
+        );
     
 };
 

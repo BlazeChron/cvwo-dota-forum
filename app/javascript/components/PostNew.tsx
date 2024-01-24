@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import { useNavigate } from "react-router-dom";
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Card } from 'react-bootstrap';
 
 const PostNew = () => {
 
@@ -35,17 +35,21 @@ const PostNew = () => {
     }
 
     return (
-        <div>
+        <Card style={{minWidth: '20rem', maxWidth: '50rem', padding: "1rem"}}>
             <Form>
-                <Form.Label>Title</Form.Label>
-                <Form.Control placeholder="Title" onChange={(event) => setTitle(event.target.value)}/>
-                <Form.Label>Body</Form.Label>
-                <Form.Control as="textarea" placeholder="Speak your mind" onChange={(event) => setBody(event.target.value)}/>
-                <Form.Label>Tags</Form.Label>
-                <Form.Control placeholder="Tags" onChange={(event) => setTags(event.target.value)}/>
+                <Form.Label>New Post</Form.Label>
+                <Form.Group className="mb-3">
+                    <Form.Control placeholder="Title" onChange={(event) => setTitle(event.target.value)}/>
+                </Form.Group>
+                <Form.Group className="mb-3">
+                    <Form.Control as="textarea" rows={3} placeholder="Enter what you want to say here" onChange={(event) => setBody(event.target.value)}/>
+                </Form.Group>
+                <Form.Group className="mb-3">
+                    <Form.Control placeholder="Tags" onChange={(event) => setTags(event.target.value)}/>
+                </Form.Group>
                 <Button className="rounded-pill" variant="outline-primary" onClick={submitPost}>Submit</Button>
             </Form>
-        </div>
+        </Card>
     );
 }
 

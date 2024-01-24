@@ -1,8 +1,8 @@
-import React, {useState, useEffect} from "react"
+/*import React, {useState, useEffect} from "react"
 import {Link, useParams, useNavigate} from "react-router-dom"
-import { Button, Modal, ModalTitle, Form, Card, Container } from 'react-bootstrap';
+import { Button, Modal, ModalTitle, Form } from 'react-bootstrap';
 
-const CommentCard = ({username, body, id}) => {
+const PostEditCard = ({username, body, id}) => {
     const navigate = useNavigate();
     const [showEdit, setShowEdit] = useState(false);
     const [commentBody, setCommentBody] = useState("");
@@ -69,12 +69,10 @@ const CommentCard = ({username, body, id}) => {
     }
 
     return (
-        <Container fluid>
-            <Card style={{maxWidth: "20rem", padding:"1rem"}}>
-                <Card.Title>{username}:</Card.Title>
-                <Card.Body>{body}</Card.Body>
-                <Button style={{alignSelf: "end"}} className="rounded-pill" variant="outline-primary" onClick={editComment}>Edit</Button>
-            </Card>
+        <div>
+            <h1>{body}</h1>
+            <p>{username}</p>
+            <Button  className="rounded-pill" variant="outline-primary" onClick={editComment}>Edit</Button>
 
             <Modal show={showEdit} onHide={stopEditComment}>
                 <Modal.Header closeButton>
@@ -97,8 +95,8 @@ const CommentCard = ({username, body, id}) => {
                 </Button>
                 </Modal.Footer>
             </Modal>
-        </Container>
+        </div>
     );
 };
 
-export default CommentCard;
+export default PostEditCard;*/
