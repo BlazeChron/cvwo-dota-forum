@@ -24,7 +24,7 @@ bin/dev
 
 
 View the website at
-localhost:3000
+http://localhost:3000/
 
 
 I do not own any of the IPs
