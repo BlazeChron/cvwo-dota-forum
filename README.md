@@ -10,7 +10,9 @@ Project for CVWO
 3. Ruby on Rails v7
 4. Postgresql
 
-### Setting up the database
+Clone the repository
+
+### Setting up the service
 Run the following commands:
 ```bash
 yarn
@@ -23,7 +25,7 @@ bin/dev
 ```
 
 
-View the website at
+View the website at default link
 http://localhost:3000/
 
 
