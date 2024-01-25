@@ -1,5 +1,6 @@
 # cvwo-dota-forum
 Project for CVWO
+by Lee Jie Hui
 
 ## Demo:
 https://cvwo-dota-forum.onrender.com/
