@@ -1,23 +1,18 @@
 # cvwo-dota-forum
 Project for CVWO
 
-Setup:
+## Setup:
 
-Prerequisites:
+### Prerequisites:
 
-Node.js and npm
+1. Node.js and npm
+2. Yarn package manager
+3. Ruby on Rails v7
+4. Postgresql
 
-Yarn package manager
-
-Ruby on Rails v7
-
-Postgresql
-
-
-Setting up the database
-
+### Setting up the database
 Run the following commands:
-
+```bash
 yarn
 
 rake db:create
@@ -25,6 +20,8 @@ rake db:create
 rake db:migrate
 
 bin/dev
+```
+
 
 View the website at
 localhost:3000
